@@ -20,6 +20,10 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/lixeiras/all', 'LixeirasController.index')
-Route.get('/estacao/all', 'EstacaosController.index')
-Route.get('/caminhao/all', 'CaminhaoController.index')
+Route.get('/lixeira', 'LixeirasController.index')
+Route.get('/estacao', 'EstacaosController.index')
+Route.get('/caminhao', 'CaminhaoController.index')
+
+Route.post('/lixeira', 'LixeirasController.store')
+Route.post('/estacao', 'EstacaosController.store')
+Route.post('/caminhao', 'CaminhaoController.store')
