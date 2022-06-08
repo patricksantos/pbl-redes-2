@@ -1,4 +1,6 @@
-class AdministradorController:
+from Mqtt import Mqtt
+
+class AdministradorController(Mqtt):
     def __init__(self):
         super().__init__()
 
