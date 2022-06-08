@@ -4,7 +4,7 @@ from time import sleep
 from Mqtt import Mqtt
 
 
-class Lixeira(Mqtt):
+class Transbordo(Mqtt):
     def __init__(self):
         super().__init__()
         self.capacidade = 0.0
@@ -29,15 +29,9 @@ class Lixeira(Mqtt):
             "capacidade": self.capacidade,
             "quantidade_lixo": self.quantidade_lixo
         }
-        self.client.publish('lixeira/capacidade', payload)
-
-    def gerar_lixo(self):
-        while True:
-            if self.quantidade_lixo == 0:
-                self.quantidade_lixo = random.randint(1, (self.capacidade+1))
-            sleep(10)
+        self.client.publish('transbordo', payload)
 
 
 if __name__ == "__main__":
-    lixeira = Lixeira()
-    lixeira.main()
+    transbordo = Transbordo()
+    transbordo.main()
