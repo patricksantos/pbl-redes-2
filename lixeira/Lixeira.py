@@ -1,3 +1,4 @@
+import json
 import random
 import threading
 from time import sleep
@@ -58,7 +59,7 @@ class Lixeira():
                 "quantidade_lixo": self.quantidade_lixo,
                 "uuid": self.uuid
             }
-            self.client.publish(self.estacao, str(payload), 0)
+            self.client.publish(self.estacao, str(json.dumps(payload)), 0)
             sleep(1)    
 
 if __name__ == "__main__":

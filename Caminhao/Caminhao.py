@@ -1,3 +1,4 @@
+import json
 import threading
 from time import sleep
 import uuid
@@ -6,16 +7,16 @@ import paho.mqtt.client as mqtt
 class Caminhao():
     def __init__(self):
         self.lista_lixeiras = []
+        self.client = mqtt.Client()
 
     def main(self):
-        client = mqtt.Client()
-        client.on_connect = self.on_connect
-        client.on_message = self.on_message
-        client.connect("localhost", 1883, 60)
+       self.client.on_connect = self.on_connect
+       self.client.on_message = self.on_message
+       self.client.connect("localhost", 1883, 60)
         # thread2 = threading.Thread(target=self.publicar)
         # thread2.daemon = True
         # thread2.start()
-        client.loop_forever()
+       self.client.loop_forever()
 
     def on_connect(self, client, userdata, flags, rc):
         if rc == 0:
@@ -28,20 +29,23 @@ class Caminhao():
             print("Não foi possivel se conectar ao broker. Codigo de erro: ",rc)
 
     def on_message(self, client, userdata, msg):
-        print(msg.topic)
-        print(str(msg.payload))
+        mensagem = str(msg.payload.decode("utf-8"))
+        dados_lixeira = json.loads(mensagem)        
+       
+        print(dados_lixeira.get("uuid"))
+        self.publicar("lixeira/"+str(dados_lixeira.get("uuid")))
+        print(self.lista_lixeiras)
 
-    def publicar(self, client):
-        while True:
-            payload = {
-                "latitude": self.latitude,
-                "longitude": self.longitude,
-                "capacidade": self.capacidade,
-                "quantidade_lixo": self.quantidade_lixo,
-                "uuid": self.uuid
-            }
-            client.publish(self.estacao, payload, 0)
-            sleep(1)    
+    def publicar(self, topico):
+        self.client.publish(topico, "dados recebidos", 0)
+        print("publicado")
+        
+    def cadastrar_lixeira(self, dados_lixeira):
+        for lixeira in self.lista_lixeiras:
+            if lixeira.get("uuid") == dados_lixeira.get("uuid"):
+                return
+        self.lista_lixeiras.append(dados_lixeira)
+
 
 if __name__ == "__main__":
     caminhao = Caminhao()
