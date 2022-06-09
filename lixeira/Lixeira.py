@@ -38,7 +38,7 @@ class Lixeira():
         while True:
             if self.quantidade_lixo == 0:
                 self.quantidade_lixo = random.randint(1, (self.capacidade+1))
-            sleep(10)
+            sleep(5)
 
     def on_connect(self, client, userdata, flags, rc):
         if rc == 0:
@@ -47,8 +47,11 @@ class Lixeira():
             print("Não foi possivel se conectar ao broker. Codigo de erro: ",rc)
 
     def on_message(self, client, userdata, msg):
-        print(msg.topic)
-        print(str(msg.payload))
+        print(self.quantidade_lixo)
+        if str(msg.payload.decode("utf-8")) == "esvaziar lixeira":
+            print("entrou")
+            self.quantidade_lixo = 0.0
+        print(self.quantidade_lixo)
 
     def publicar(self):
         while True:
