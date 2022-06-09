@@ -5,6 +5,7 @@ from time import sleep
 import uuid
 import paho.mqtt.client as mqtt
 
+
 class Lixeira():
     def __init__(self):
         self.capacidade = 0.0
@@ -12,7 +13,7 @@ class Lixeira():
         self.latitude = 0
         self.longitude = 0
         self.uuid = str(uuid.uuid4())
-        self.estacao = "estacao "+str(random.randint(1,6))
+        self.estacao = "estacao "+str(random.randint(1, 6))
         self.client = mqtt.Client()
 
     def main(self):
@@ -44,7 +45,7 @@ class Lixeira():
         if rc == 0:
             client.subscribe("lixeira/"+str(self.uuid))
         else:
-            print("Não foi possivel se conectar ao broker. Codigo de erro: ",rc)
+            print("Não foi possivel se conectar ao broker. Codigo de erro: ", rc)
 
     def on_message(self, client, userdata, msg):
         if str(msg.payload.decode("utf-8")) == "esvaziar lixeira":
@@ -57,10 +58,12 @@ class Lixeira():
                 "longitude": self.longitude,
                 "capacidade": self.capacidade,
                 "quantidade_lixo": self.quantidade_lixo,
-                "uuid": self.uuid
+                "uuid": self.uuid,
+                "estacao": self.estacao
             }
             self.client.publish(self.estacao, str(json.dumps(payload)), 0)
-            sleep(1)    
+            sleep(5)
+
 
 if __name__ == "__main__":
     lixeira = Lixeira()
