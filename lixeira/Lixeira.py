@@ -47,11 +47,8 @@ class Lixeira():
             print("Não foi possivel se conectar ao broker. Codigo de erro: ",rc)
 
     def on_message(self, client, userdata, msg):
-        print(self.quantidade_lixo)
         if str(msg.payload.decode("utf-8")) == "esvaziar lixeira":
-            print("entrou")
             self.quantidade_lixo = 0.0
-        print(self.quantidade_lixo)
 
     def publicar(self):
         while True:
