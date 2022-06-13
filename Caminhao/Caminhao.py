@@ -44,8 +44,9 @@ class Caminhao():
                 if lixeira.get("uuid") == dados_lixeira.get("uuid") and lixeira.get("quantidade_lixo") == 0.0:
                     lixeira.update(
                         {"quantidade_lixo": dados_lixeira.get("quantidade_lixo")})
-                    requests.patch("http://127.0.0.1:5000/lixeira/", data={"uuid": lixeira.get(
-                        "uuid"), "quantidade_lixo": lixeira.get("quantidade_lixo")})
+                    uuid = lixeira.get("uuid")
+                    requests.patch('http://127.0.0.1:5000/lixeira/' + str(uuid),
+                                   json={"quantidade_lixo": lixeira.get("quantidade_lixo")})
                     return
                 elif lixeira.get("uuid") == dados_lixeira.get("uuid") and lixeira.get("quantidade_lixo") != 0.0:
                     return
@@ -79,8 +80,9 @@ class Caminhao():
             lixeira = self.lista_lixeiras.pop(0)
             lixeira.update({"quantidade_lixo": 0.0})
             self.lista_lixeiras.append(lixeira)
-            requests.patch("http://127.0.0.1:5000/lixeira/", json == {"uuid": lixeira.get(
-                "uuid"), "quantidade_lixo": lixeira.get("quantidade_lixo")})
+            uuid = lixeira.get("uuid")
+            requests.patch('http://127.0.0.1:5000/lixeira/' + str(uuid), json={
+                           "quantidade_lixo": lixeira.get("quantidade_lixo")})
             self.publicar("lixeira/"+str(lixeira.get("uuid")))
 
     def ordenar_lixeiras(self):

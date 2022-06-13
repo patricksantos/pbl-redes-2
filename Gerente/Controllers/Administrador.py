@@ -1,5 +1,4 @@
 import json
-
 from flask import jsonify, make_response
 
 
@@ -10,20 +9,16 @@ class AdministradorController():
 
     def getAllLixeiras(self, count):
         i = 0
-        lista_lixeiras = []
-        if len(self.lixeirasTopicos) == 0:
-            return make_response(jsonify({"message": "Não há lixeiras cadastradas."}), 400)
+        getAllLixeiras = []
+        # Falta ordenar as lixeiras
         for lixeira in self.lixeirasTopicos:
             if(i < count):
-                lista_lixeiras.append(lixeira)
+                getAllLixeiras.append(json.loads(lixeira))
                 i += 1
-        if len(lista_lixeiras) > 1:
-            lista_lixeiras = sorted(
-                lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
-        return make_response({"lista das lixeiras": lista_lixeiras}, 200)
+        return json.dumps(getAllLixeiras)
 
     def createdLixeira(self, uuid, latitude, longitude, capacidade, quantidade_lixo, estacao):
-        dados_lixeira = {
+        lixeira = {
             "uuid": uuid,
             "latitude": latitude,
             "longitude": longitude,
@@ -31,27 +26,36 @@ class AdministradorController():
             "quantidade_lixo": quantidade_lixo,
             "estacao": estacao
         }
-        for lixeira in self.lixeirasTopicos:
-            if lixeira.get("uuid") == dados_lixeira.get("uuid"):
-                return make_response(jsonify({"message": "lixeira já está cadastrada."}), 400)
-        self.lixeirasTopicos.append(dados_lixeira)
-        return make_response({"lixeira": self.lixeirasTopicos}, 200)
+        self.lixeirasTopicos.append(json.dumps(lixeira))
+        return json.dumps(lixeira)
 
     def findById(self, uuid):
         for lixeira in self.lixeirasTopicos:
-            if(lixeira.get("uuid") == str(uuid)):
-                return make_response({"lixeira": lixeira}, 200)
-        return make_response(jsonify({"message": "Não há lixeira com o ID informado, cadastradas."}), 400)
+            data = json.loads(lixeira)
+            if(str(data["uuid"]) == str(uuid)):
+                return json.loads(lixeira)
+
+        return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
 
     def updateLixeira(self, uuid, quantidade_lixo):
-        i = 0
+        print(uuid)
         if len(self.lixeirasTopicos) == 0:
-            return make_response(jsonify({"message": "Não há lixeiras cadastradas."}), 400)
+            return json.dumps({"message": "Não há lixeiras cadastradas."})
         for lixeira in self.lixeirasTopicos:
-            if(lixeira.get("uuid") == str(uuid)):
-                lixeira = self.lixeirasTopicos.pop(i)
-                lixeira.update({"quantidade_lixo": quantidade_lixo})
-                self.lixeirasTopicos.append(lixeira)
-                return make_response({"lixeira": self.lixeirasTopicos}, 200)
-            i += 1
-        return make_response(jsonify({"message": "Não há lixeira com o ID informado, cadastradas."}), 400)
+            data = json.loads(lixeira)
+            if(str(data["uuid"]) == str(uuid)):
+                updatedLixeira = {
+                    "uuid": int(uuid),
+                    "latitude": data["latitude"],
+                    "longitude": data["longitude"],
+                    "capacidade": data["capacidade"],
+                    "quantidade_lixo": quantidade_lixo,
+                    "estacao": data["estacao"]
+                }
+                if quantidade_lixo > data["capacidade"]:
+                    return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
+                self.lixeirasTopicos.remove(lixeira)
+                self.lixeirasTopicos.append(json.dumps(updatedLixeira))
+                return json.dumps(updatedLixeira)
+
+        return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
