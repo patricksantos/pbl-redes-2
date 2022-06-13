@@ -58,7 +58,7 @@ class Caminhao():
                 "estacao": dados_lixeira.get("estacao"),
                 "capacidade": dados_lixeira.get("capacidade")
             }
-            payload = json.dumps(payload)
+            # payload = json.dumps(payload)
             requests.post("http://127.0.0.1:5000/lixeira", json=payload)
             self.lista_lixeiras.append(dados_lixeira)
             self.ordenar_lixeiras()
@@ -71,7 +71,7 @@ class Caminhao():
                 "estacao": dados_lixeira.get("estacao"),
                 "capacidade": dados_lixeira.get("capacidade")
             }
-            payload = json.dumps(payload)
+            # payload = json.dumps(payload)
             requests.post("http://127.0.0.1:5000/lixeira", json=payload)
             self.lista_lixeiras.append(dados_lixeira)
 

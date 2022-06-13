@@ -45,7 +45,7 @@ class AdministradorController():
             data = json.loads(lixeira)
             if(str(data["uuid"]) == str(uuid)):
                 updatedLixeira = {
-                    "uuid": int(uuid),
+                    "uuid": uuid,
                     "latitude": data["latitude"],
                     "longitude": data["longitude"],
                     "capacidade": data["capacidade"],
