@@ -75,6 +75,9 @@ class Setor:
             self.lista_lixeiras = sorted(
                 self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
 
+    def publicar(self, topico):
+        self.client.publish(topico, "esvaziar lixeira", 0)
+
 
 if __name__ == "__main__":
     setor = Setor()

@@ -9,11 +9,9 @@ apiController = api.ApiController()
 # Exemplo body = {"count": 10}
 
 
-@app.route('/lixeira/all', methods=['GET'])
-def getAllLixeiras():
-    json = request.get_json()
-    count: int = json['count']
-    data = apiController.getAllLixeiras(count)
+@app.route('/lixeira/all/<count>', methods=['GET'])
+def getAllLixeiras(count):
+    data = apiController.getAllLixeiras(int(count))
     return data
 
 

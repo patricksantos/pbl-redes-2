@@ -2,41 +2,26 @@ import json
 import threading
 from time import sleep
 import requests
-import paho.mqtt.client as mqtt
+from decouple import config as env
 
 
 class Caminhao():
 
     def __init__(self):
         self.lista_lixeiras = []
-        self.client = mqtt.Client()
+        self.api_url = env('API_URL')
 
     def main(self):
-        self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        self.client.connect("mqtt.eclipseprojects.io", 1883, 60)
+        thread1 = threading.Thread(target=self.requisitar_trajeto)
+        thread1.daemon = True
+        thread1.start()
         thread2 = threading.Thread(target=self.realizar_trajeto)
         thread2.daemon = True
         thread2.start()
-        self.client.loop_forever()
 
-    def on_connect(self, client, userdata, flags, rc):
-        if rc == 0:
-            client.subscribe("estacao 1")
-            client.subscribe("estacao 2")
-            client.subscribe("estacao 3")
-            client.subscribe("estacao 4")
-            client.subscribe("estacao 5")
-        else:
-            print("Não foi possivel se conectar ao broker. Codigo de erro: ", rc)
-
-    def on_message(self, client, userdata, msg):
-        mensagem = str(msg.payload.decode("utf-8"))
-        dados_lixeira = json.loads(mensagem)
-        self.cadastrar_lixeira(dados_lixeira)
-
-    def publicar(self, topico):
-        self.client.publish(topico, "esvaziar lixeira", 0)
+    def requisitar_trajeto(self):
+        response = requests.get(f'{self.api_url}/lixeira/all')
+        self.lista_lixeiras = response.json()
 
     def esvaziar_lixeira(self):
         if len(self.lista_lixeiras) > 0:
@@ -44,9 +29,8 @@ class Caminhao():
             lixeira.update({"quantidade_lixo": 0.0})
             self.lista_lixeiras.append(lixeira)
             uuid = lixeira.get("uuid")
-            requests.patch('http://127.0.0.1:5000/lixeira/' + str(uuid), json={
+            requests.patch(f'{self.api_url}/lixeira/' + str(uuid), json={
                            "quantidade_lixo": lixeira.get("quantidade_lixo")})
-            self.publicar("lixeira/"+str(lixeira.get("uuid")))
 
     def realizar_trajeto(self):
         while True:

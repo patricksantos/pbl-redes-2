@@ -4,13 +4,20 @@ import json
 class ApiController():
     def __init__(self):
         super().__init__()
-        self.lixeirasTopicos: list = []
+        self.lista_lixeiras: list = []
+
+    def ordenar_lixeiras(self):
+        if len(self.lista_lixeiras) > 1:
+            self.lista_lixeiras = sorted(
+                self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
 
     def getAllLixeiras(self, count):
+        if len(self.lista_lixeiras) == 0:
+            return json.dumps({"message": "Não há lixeiras cadastradas."})
         i = 0
         getAllLixeiras = []
-        # Falta ordenar as lixeiras
-        for lixeira in self.lixeirasTopicos:
+        self.ordenar_lixeiras()
+        for lixeira in self.lista_lixeiras:
             if(i < count):
                 getAllLixeiras.append(json.loads(lixeira))
                 i += 1
@@ -25,11 +32,11 @@ class ApiController():
             "quantidade_lixo": quantidade_lixo,
             "estacao": estacao
         }
-        self.lixeirasTopicos.append(json.dumps(lixeira))
+        self.lista_lixeiras.append(json.dumps(lixeira))
         return json.dumps(lixeira)
 
     def findById(self, uuid):
-        for lixeira in self.lixeirasTopicos:
+        for lixeira in self.lista_lixeiras:
             data = json.loads(lixeira)
             if(str(data["uuid"]) == str(uuid)):
                 return json.loads(lixeira)
@@ -38,9 +45,9 @@ class ApiController():
 
     def updateLixeira(self, uuid, quantidade_lixo):
         print(uuid)
-        if len(self.lixeirasTopicos) == 0:
+        if len(self.lista_lixeiras) == 0:
             return json.dumps({"message": "Não há lixeiras cadastradas."})
-        for lixeira in self.lixeirasTopicos:
+        for lixeira in self.lista_lixeiras:
             data = json.loads(lixeira)
             if(str(data["uuid"]) == str(uuid)):
                 updatedLixeira = {
@@ -53,8 +60,8 @@ class ApiController():
                 }
                 if quantidade_lixo > data["capacidade"]:
                     return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
-                self.lixeirasTopicos.remove(lixeira)
-                self.lixeirasTopicos.append(json.dumps(updatedLixeira))
+                self.lista_lixeiras.remove(lixeira)
+                self.lista_lixeiras.append(json.dumps(updatedLixeira))
                 return json.dumps(updatedLixeira)
 
         return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
