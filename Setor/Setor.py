@@ -7,7 +7,7 @@ import paho.mqtt.client as mqtt
 from decouple import config as env
 
 
-class Setor:
+class Setor():
     def __init__(self):
         self.lista_lixeiras = []
         self.client = mqtt.Client()
@@ -77,6 +77,28 @@ class Setor:
 
     def publicar(self, topico):
         self.client.publish(topico, "esvaziar lixeira", 0)
+
+    def updateLixeira(self, uuid, quantidade_lixo):
+        if len(self.lista_lixeiras) == 0:
+            return json.dumps({"message": "Não há lixeiras cadastradas."})
+        for lixeira in self.lista_lixeiras:
+            data = json.loads(lixeira)
+            if(str(data["uuid"]) == str(uuid)):
+                updatedLixeira = {
+                    "uuid": uuid,
+                    "latitude": data["latitude"],
+                    "longitude": data["longitude"],
+                    "capacidade": data["capacidade"],
+                    "quantidade_lixo": quantidade_lixo,
+                    "estacao": data["estacao"]
+                }
+                if quantidade_lixo > data["capacidade"]:
+                    return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
+                self.lista_lixeiras.remove(lixeira)
+                self.lista_lixeiras.append(json.dumps(updatedLixeira))
+                return json.dumps(updatedLixeira)
+
+        return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
 
 
 if __name__ == "__main__":

@@ -7,8 +7,6 @@ app = Flask(__name__)
 apiController = api.ApiController()
 
 # Exemplo body = {"count": 10}
-
-
 @app.route('/lixeira/all/<count>', methods=['GET'])
 def getAllLixeiras(count):
     data = apiController.getAllLixeiras(int(count))

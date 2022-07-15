@@ -1,6 +1,5 @@
 import json
 
-
 class ApiController():
     def __init__(self):
         super().__init__()
