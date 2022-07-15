@@ -4,6 +4,7 @@ import threading
 from time import sleep
 import uuid
 import paho.mqtt.client as mqtt
+from decouple import config as env
 
 
 class Lixeira():
@@ -13,7 +14,7 @@ class Lixeira():
         self.latitude = 0
         self.longitude = 0
         self.uuid = str(uuid.uuid4())
-        self.estacao = "estacao "+str(random.randint(1, 6))
+        self.setor = f"{env('HOST')}/setor"
         self.client = mqtt.Client()
 
     def main(self):
@@ -50,6 +51,8 @@ class Lixeira():
     def on_message(self, client, userdata, msg):
         if str(msg.payload.decode("utf-8")) == "esvaziar lixeira":
             self.quantidade_lixo = 0.0
+        else:
+            print("Comando desconhecido: "+str(msg.payload.decode("utf-8")))
 
     def publicar(self):
         while True:
@@ -59,9 +62,9 @@ class Lixeira():
                 "capacidade": self.capacidade,
                 "quantidade_lixo": self.quantidade_lixo,
                 "uuid": self.uuid,
-                "estacao": self.estacao
+                "setor": self.setor
             }
-            self.client.publish(self.estacao, str(json.dumps(payload)), 0)
+            self.client.publish(self.setor, str(json.dumps(payload)), 0)
             sleep(5)
 
 
