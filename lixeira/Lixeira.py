@@ -29,7 +29,7 @@ class Lixeira():
         thread.start()
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
-        self.client.connect("localhost", 1883, 60)
+        self.client.connect("mqtt.eclipseprojects.io", 1883, 60)
         thread2 = threading.Thread(target=self.publicar)
         thread2.daemon = True
         thread2.start()
