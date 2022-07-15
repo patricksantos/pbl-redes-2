@@ -74,3 +74,8 @@ class Setor:
         if len(self.lista_lixeiras) > 1:
             self.lista_lixeiras = sorted(
                 self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
+
+
+if __name__ == "__main__":
+    setor = Setor()
+    setor.main()
