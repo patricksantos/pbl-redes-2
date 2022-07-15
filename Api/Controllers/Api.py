@@ -1,8 +1,7 @@
 import json
-from flask import jsonify, make_response
 
 
-class AdministradorController():
+class ApiController():
     def __init__(self):
         super().__init__()
         self.lixeirasTopicos: list = []

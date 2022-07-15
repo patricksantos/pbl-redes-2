@@ -1,19 +1,16 @@
-## TCP-SERVER
+## PBL-REDES-3
 
 ### Setup do projeto
 - Na pasta raiz do projeto, executar pip install requirements.txt -r
 
-### Inicializar Broker MQTT
-- Baixar o Mosquitto, acessar a pasta raiz e executar mosquitto.exe -v
-
-### Executar servidor
-- python server.py
+### Executar API
+- Na pasta Api, executar o comando python routes.py
 
 ### Executar setor
 - python section.py
 
-### Executar dumpspter
-- python dumpster.py
+### Executar Lixeira
+-  Na pasta Lixeira, executar o comando python Lixeira.py
 
-### Executar caminhão
-- python truck.py
+### Executar Caminhão
+- Na pasta Caminhao, executar o comando python Caminhao.py

@@ -1,10 +1,10 @@
 
 from re import I
 from flask import Flask, request
-import Controllers.Administrador as controller
+import Controllers.Api as api
 
 app = Flask(__name__)
-administradorController = controller.AdministradorController()
+apiController = api.ApiController()
 
 # Exemplo body = {"count": 10}
 
@@ -13,13 +13,13 @@ administradorController = controller.AdministradorController()
 def getAllLixeiras():
     json = request.get_json()
     count: int = json['count']
-    data = administradorController.getAllLixeiras(count)
+    data = apiController.getAllLixeiras(count)
     return data
 
 
 @app.route('/lixeira/<uuid>', methods=['GET'])
 def findById(uuid):
-    data = administradorController.findById(uuid)
+    data = apiController.findById(uuid)
     return data
 
 
@@ -34,7 +34,7 @@ def createdLixeira():
     quantidade_lixo = body['quantidade_lixo']
     estacao = body['estacao']
 
-    data = administradorController.createdLixeira(
+    data = apiController.createdLixeira(
         uuid, latitude, longitude, capacidade, quantidade_lixo, estacao)
     return data
 
@@ -44,7 +44,7 @@ def createdLixeira():
 def updateLixeira(uuid):
     body = request.get_json()
     quantidade_lixo = body['quantidade_lixo']
-    data = administradorController.updateLixeira(uuid, quantidade_lixo)
+    data = apiController.updateLixeira(uuid, quantidade_lixo)
     return data
 
 
