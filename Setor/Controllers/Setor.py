@@ -29,11 +29,11 @@ class Setor():
 
     def on_message(self, client, userdata, msg):
         mensagem = str(msg.payload.decode("utf-8"))
-        print(mensagem)
         dados_lixeira = json.loads(mensagem)
         self.cadastrar_lixeira(dados_lixeira)
 
     def cadastrar_lixeira(self, dados_lixeira):
+        print(len(self.lista_lixeiras))
         if len(self.lista_lixeiras) > 0:
             for lixeira in self.lista_lixeiras:
                 if lixeira.get("uuid") == dados_lixeira.get("uuid") and lixeira.get("quantidade_lixo") == 0.0:
@@ -107,9 +107,9 @@ class Setor():
         else:
             response = requests.get(f'{self.carlos_url}/lixeiras')
             lixeiras_outro_setor = response.json()
-        self.lista_lixeiras = self.lista_lixeiras + lixeiras_outro_setor
-        return self.lista_lixeiras
-
+        retorno = self.lista_lixeiras + lixeiras_outro_setor
+        return retorno
+    
     def getLixeiras(self):
         return self.lista_lixeiras
 
