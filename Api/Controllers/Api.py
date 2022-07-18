@@ -42,6 +42,9 @@ class ApiController():
             "quantidade_lixo": quantidade_lixo,
             "setor": setor
         }
+        for lixeira in self.lista_lixeiras:
+            if lixeira.get("uuid") == uuid:
+                return 
         self.lista_lixeiras.append(json.dumps(lixeira))
         return json.dumps(lixeira)
 

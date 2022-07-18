@@ -120,7 +120,6 @@ class Setor():
         return self.lista_lixeiras
 
 
-
 if __name__ == "__main__":
     setor = Setor()
     setor.main()
