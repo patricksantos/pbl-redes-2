@@ -43,6 +43,7 @@ class ApiController():
             "setor": setor
         }
         for lixeira in self.lista_lixeiras:
+            lixeira = json.loads(lixeira)
             if lixeira.get("uuid") == uuid:
                 return 
         self.lista_lixeiras.append(json.dumps(lixeira))
