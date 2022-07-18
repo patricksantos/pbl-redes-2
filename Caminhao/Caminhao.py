@@ -1,4 +1,3 @@
-import json
 import threading
 from time import sleep
 import requests
@@ -10,6 +9,7 @@ class Caminhao():
     def __init__(self):
         self.lista_lixeiras = []
         self.api_url = env('API_URL')
+        self.host= env('HOST')
 
     def main(self):
         thread1 = threading.Thread(target=self.requisitar_trajeto)
@@ -20,7 +20,7 @@ class Caminhao():
         thread2.start()
 
     def requisitar_trajeto(self):
-        response = requests.get(f'{self.api_url}/lixeira/all/5')
+        response = requests.get(f'{self.api_url}/lixeira/all/5/{self.host}')
         self.lista_lixeiras = response.json()
 
     def esvaziar_lixeira(self):

@@ -1,18 +1,29 @@
 import json
+from urllib import response
+from decouple import config as env
+import requests
 
 class ApiController():
     def __init__(self):
         super().__init__()
         self.lista_lixeiras: list = []
+        self.carlos_url = env('CARLOS_URL')
+        self.patrick_url = env('PATRICK_URL')
 
     def ordenar_lixeiras(self):
         if len(self.lista_lixeiras) > 1:
             self.lista_lixeiras = sorted(
                 self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
 
-    def getAllLixeiras(self, count):
+    def getAllLixeiras(self, count, host):
         if len(self.lista_lixeiras) == 0:
             return json.dumps({"message": "Não há lixeiras cadastradas."})
+        if host == self.carlos_url.split(':')[0]:
+            response = requests.get(f'{self.carlos_url}/lixeira/all/')
+            self.lista_lixeiras = response.json()
+        else: 
+            response = requests.get(f'{self.patrick_url}/lixeira/all/')
+            self.lista_lixeiras = response.json()
         i = 0
         getAllLixeiras = []
         self.ordenar_lixeiras()

@@ -1,5 +1,3 @@
-
-from re import I
 from flask import Flask, request
 import Controllers.Api as api
 
@@ -9,9 +7,9 @@ apiController = api.ApiController()
 # Exemplo body = {"count": 10}
 
 
-@app.route('/lixeira/all/<count>', methods=['GET'])
+@app.route('/lixeira/all/<count>/<host>', methods=['GET'])
 def getAllLixeiras(count):
-    data = apiController.getAllLixeiras(int(count))
+    data = apiController.getAllLixeiras(int(count), str(host))
     return data
 
 

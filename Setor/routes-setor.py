@@ -18,4 +18,4 @@ def updateLixeira(uuid):
     return json.dumps(data)
 
 if __name__ == "__main__":
-    app.run(host=env('HOST'), port=5000)
+    app.run(host=env('HOST'), port=6000)
