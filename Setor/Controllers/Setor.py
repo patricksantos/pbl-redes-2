@@ -1,6 +1,4 @@
 import json
-import threading
-from time import sleep
 import uuid
 import requests
 import paho.mqtt.client as mqtt
@@ -21,9 +19,6 @@ class Setor():
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.connect("mqtt.eclipseprojects.io", 1883, 60)
-        thread2 = threading.Thread(target=self.realizar_trajeto)
-        thread2.daemon = True
-        thread2.start()
         self.client.loop_forever()
 
     def on_connect(self, client, userdata, flags, rc):
