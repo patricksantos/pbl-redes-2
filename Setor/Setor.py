@@ -96,6 +96,7 @@ class Setor():
                     return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
                 self.lista_lixeiras.remove(lixeira)
                 self.lista_lixeiras.append(json.dumps(updatedLixeira))
+                self.publicar("lixeira/"+str(uuid))
                 return json.dumps(updatedLixeira)
 
         return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
