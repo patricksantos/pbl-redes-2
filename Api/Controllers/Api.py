@@ -10,31 +10,50 @@ class ApiController():
         self.carlos_url = env('CARLOS_URL')
         self.patrick_url = env('PATRICK_URL')
 
-    def ordenar_lixeiras(self):
-        if len(self.lista_lixeiras) > 1:
-            self.lista_lixeiras = sorted(
-                self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
+    def ordenar_lixeiras(self, lista):
+        if len(lista) > 1:
+            lista = sorted(
+                lista, key=lambda i: i['quantidade_lixo'], reverse=True)
+            return lista
+
+    def getLixeiras(self, count):
+        if len(self.lista_lixeiras) == 0:
+            return json.dumps({"message": "Não há lixeiras cadastradas."})
+        i = 0
+        getAllLixeiras = []
+        temp_list = []
+        for lixeira in self.lista_lixeiras:
+            temp_list.append(json.loads(lixeira))
+        temp_list = self.ordenar_lixeiras(temp_list)
+        for lixeira in temp_list:
+            if(i < count):
+                getAllLixeiras.append(lixeira)
+                i += 1
+        return json.dumps(getAllLixeiras)
 
     def getAllLixeiras(self, count, host):
         if len(self.lista_lixeiras) == 0:
             return json.dumps({"message": "Não há lixeiras cadastradas."})
-        if host == self.carlos_url.split(':')[0]:
+        retorno = []
+        if host == "http://"+self.carlos_url.split(':')[0]:
             response = requests.get(f'{self.carlos_url}/lixeira/all/')
-            self.lista_lixeiras = response.json()
+            retorno = response.json()
         else: 
             response = requests.get(f'{self.patrick_url}/lixeira/all/')
-            self.lista_lixeiras = response.json()
+            retorno = response.json()
+        if len(retorno) == 0:
+            return json.dumps([])
         i = 0
         getAllLixeiras = []
-        self.ordenar_lixeiras()
-        for lixeira in self.lista_lixeiras:
+        retorno = self.ordenar_lixeiras(retorno)
+        for lixeira in retorno:
             if(i < count):
-                getAllLixeiras.append(json.loads(lixeira))
+                getAllLixeiras.append(lixeira)
                 i += 1
         return json.dumps(getAllLixeiras)
 
     def createdLixeira(self, uuid, latitude, longitude, capacidade, quantidade_lixo, setor):
-        lixeira = {
+        lixeira_cadastro = {
             "uuid": uuid,
             "latitude": latitude,
             "longitude": longitude,
@@ -45,9 +64,9 @@ class ApiController():
         for lixeira in self.lista_lixeiras:
             lixeira = json.loads(lixeira)
             if lixeira.get("uuid") == uuid:
-                return 
-        self.lista_lixeiras.append(json.dumps(lixeira))
-        return json.dumps(lixeira)
+                return json.dumps({"message":"Lixeira já está cadastrada"})
+        self.lista_lixeiras.append(json.dumps(lixeira_cadastro))
+        return json.dumps(lixeira_cadastro)
 
     def findById(self, uuid):
         for lixeira in self.lista_lixeiras:

@@ -10,10 +10,14 @@ host = env('HOST')
 
 
 @app.route('/lixeira/all/<count>/<host>', methods=['GET'])
-def getAllLixeiras(count, host):
+def getLixeiras(count, host):
     data = apiController.getAllLixeiras(int(count), str(host))
     return data
 
+@app.route('/lixeira/all/<count>', methods=['GET'])
+def getAllLixeiras(count):
+    data = apiController.getLixeiras(int(count))
+    return data
 
 @app.route('/lixeira/<uuid>', methods=['GET'])
 def findById(uuid):

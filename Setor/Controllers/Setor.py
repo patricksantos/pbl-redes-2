@@ -33,7 +33,14 @@ class Setor():
         self.cadastrar_lixeira(dados_lixeira)
 
     def cadastrar_lixeira(self, dados_lixeira):
-        print(len(self.lista_lixeiras))
+        payload = {
+                "quantidade_lixo": dados_lixeira.get("quantidade_lixo"),
+                "uuid": dados_lixeira.get("uuid"),
+                "latitude": dados_lixeira.get("latitude"),
+                "longitude": dados_lixeira.get("longitude"),
+                "setor": dados_lixeira.get("setor"),
+                "capacidade": dados_lixeira.get("capacidade")
+        }
         if len(self.lista_lixeiras) > 0:
             for lixeira in self.lista_lixeiras:
                 if lixeira.get("uuid") == dados_lixeira.get("uuid") and lixeira.get("quantidade_lixo") == 0.0:
@@ -44,27 +51,11 @@ class Setor():
                                    json={"quantidade_lixo": lixeira.get("quantidade_lixo")})
                     return
                 elif lixeira.get("uuid") == dados_lixeira.get("uuid") and lixeira.get("quantidade_lixo") != 0.0:
-                    return
-            payload = {
-                "quantidade_lixo": dados_lixeira.get("quantidade_lixo"),
-                "uuid": dados_lixeira.get("uuid"),
-                "latitude": dados_lixeira.get("latitude"),
-                "longitude": dados_lixeira.get("longitude"),
-                "setor": dados_lixeira.get("setor"),
-                "capacidade": dados_lixeira.get("capacidade")
-            }
+                    return requests.post(f"{self.api_url}/lixeira", json=payload)            
             requests.post(f"{self.api_url}/lixeira", json=payload)
             self.lista_lixeiras.append(dados_lixeira)
             self.ordenar_lixeiras()
         else:
-            payload = {
-                "quantidade_lixo": dados_lixeira.get("quantidade_lixo"),
-                "uuid": dados_lixeira.get("uuid"),
-                "latitude": dados_lixeira.get("latitude"),
-                "longitude": dados_lixeira.get("longitude"),
-                "setor": dados_lixeira.get("setor"),
-                "capacidade": dados_lixeira.get("capacidade")
-            }
             requests.post(f"{self.api_url}/lixeira", json=payload)
             self.lista_lixeiras.append(dados_lixeira)
 
