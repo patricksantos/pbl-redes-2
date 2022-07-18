@@ -101,12 +101,18 @@ class Setor():
 
     def requisitar_lixeiras(self):
         lixeiras_outro_setor = []
-        if env('HOST')+":5000" == self.carlos_url:
+        if env('HOST')+":6000" == self.carlos_url.split('/')[2]:
             response = requests.get(f'{self.patrick_url}/lixeiras')
-            lixeiras_outro_setor = response.json()
+            if response.status_code == 308:
+                return []
+            else:
+                lixeiras_outro_setor = response.json()
         else:
             response = requests.get(f'{self.carlos_url}/lixeiras')
-            lixeiras_outro_setor = response.json()
+            if response.status_code == 308:
+                return []
+            else:
+                lixeiras_outro_setor = response.json()        
         retorno = self.lista_lixeiras + lixeiras_outro_setor
         return retorno
     
