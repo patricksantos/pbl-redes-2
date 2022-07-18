@@ -20,7 +20,7 @@ class Caminhao():
         thread2.start()
 
     def requisitar_trajeto(self):
-        response = requests.get(f'{self.api_url}/lixeira/all')
+        response = requests.get(f'{self.api_url}/lixeira/all/5')
         self.lista_lixeiras = response.json()
 
     def esvaziar_lixeira(self):

@@ -14,6 +14,8 @@ class Setor():
         self.host = env('HOST')
         self.api_url = env('API_URL')
         self.uuid = str(uuid.uuid4())
+        self.carlos_url = env('CARLOS_URL')
+        self.patrick_url = env('PATRICK_URL')
 
     def main(self):
         self.client.on_connect = self.on_connect
@@ -100,6 +102,16 @@ class Setor():
                 return json.dumps(updatedLixeira)
 
         return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
+
+    def requisitar_lixeiras(self):
+        lixeiras_outro_setor = []
+        if env('HOST')+":5000" == self.carlos_url:
+            response = requests.get(f'{self.patrick_url}')
+            lixeiras_outro_setor = response.json()
+        else:
+            response = requests.get(f'{self.carlos_url}')
+            lixeiras_outro_setor = response.json()
+        return (self.lista_lixeiras + lixeiras_outro_setor)
 
 
 if __name__ == "__main__":

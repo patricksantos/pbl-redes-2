@@ -1,19 +1,21 @@
 
-from re import I
-from flask import Flask, request
+import json
+from flask import Flask
 import Setor.Setor as Setor
+from decouple import config as env
 
 app = Flask(__name__)
 apiController = Setor.setor
 
 @app.route('/lixeira/all/', methods=['GET'])
 def getAllLixeiras():
-    data = apiController.lista_lixeiras
-    return data
+    data = apiController.requisitar_lixeiras
+    return json.dumps(data)
 
 @app.route('/lixeira/<uuid>', methods=['PATCH'])
 def updateLixeira(uuid):
     data = apiController.updateLixeira(uuid, 0)
-    return data
+    return json.dumps(data)
 
-app.run()
+if __name__ == "__main__":
+    app.run(host=env('HOST'), port=5000)
