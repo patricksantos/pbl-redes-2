@@ -1,10 +1,12 @@
 from flask import Flask, request
 import Controllers.Api as api
+from decouple import config as env
 
 app = Flask(__name__)
 apiController = api.ApiController()
 
 # Exemplo body = {"count": 10}
+host = env('HOST')
 
 
 @app.route('/lixeira/all/<count>/<host>', methods=['GET'])
@@ -45,4 +47,4 @@ def updateLixeira(uuid):
 
 
 if __name__ == "__main__":
-    app.run(host="25.55.177.48", port=5000)
+    app.run(host=host, port=5000)

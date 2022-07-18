@@ -111,7 +111,8 @@ class Setor():
         else:
             response = requests.get(f'{self.carlos_url}')
             lixeiras_outro_setor = response.json()
-        return (self.lista_lixeiras + lixeiras_outro_setor)
+        self.lista_lixeiras = self.lista_lixeiras + lixeiras_outro_setor
+        return self.lista_lixeiras
 
 
 if __name__ == "__main__":
