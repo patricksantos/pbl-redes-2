@@ -8,7 +8,7 @@ apiController = api.ApiController()
 
 
 @app.route('/lixeira/all/<count>/<host>', methods=['GET'])
-def getAllLixeiras(count):
+def getAllLixeiras(count, host):
     data = apiController.getAllLixeiras(int(count), str(host))
     return data
 
