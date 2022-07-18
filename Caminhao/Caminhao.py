@@ -3,7 +3,6 @@ from time import sleep
 import requests
 from decouple import config as env
 
-
 class Caminhao():
 
     def __init__(self):
@@ -12,12 +11,7 @@ class Caminhao():
         self.host= env('HOST')
 
     def main(self):
-        thread1 = threading.Thread(target=self.requisitar_trajeto)
-        thread1.daemon = True
-        thread1.start()
-        thread2 = threading.Thread(target=self.realizar_trajeto)
-        thread2.daemon = True
-        thread2.start()
+        self.realizar_trajeto()
 
     def requisitar_trajeto(self):
         response = requests.get(f'{self.api_url}/lixeira/all/5/{self.host}')
@@ -27,13 +21,19 @@ class Caminhao():
         if len(self.lista_lixeiras) > 0:
             lixeira = self.lista_lixeiras.pop(0)
             lixeira.update({"quantidade_lixo": 0.0})
-            self.lista_lixeiras.append(lixeira)
             uuid = lixeira.get("uuid")
             requests.patch(f'{self.api_url}/lixeira/' + str(uuid), json={
                            "quantidade_lixo": lixeira.get("quantidade_lixo")})
 
+    def ordenar_lixeiras(self):
+        if len(self.lista_lixeiras) > 1:
+            self.lista_lixeiras = sorted(
+                self.lista_lixeiras, key=lambda i: i['quantidade_lixo'], reverse=True)
+
     def realizar_trajeto(self):
         while True:
+            if(len(self.lista_lixeiras) == 0):
+                self.requisitar_trajeto()
             self.esvaziar_lixeira()
             self.ordenar_lixeiras()
             sleep(5)

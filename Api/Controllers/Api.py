@@ -77,22 +77,21 @@ class ApiController():
         return json.dumps({"message": "Não há lixeira com o ID informado, cadastradas."})
 
     def updateLixeira(self, uuid, quantidade_lixo):
-        print(uuid)
         if len(self.lista_lixeiras) == 0:
             return json.dumps({"message": "Não há lixeiras cadastradas."})
         for lixeira in self.lista_lixeiras:
             data = json.loads(lixeira)
-            if(str(data["uuid"]) == str(uuid)):
+            if(str(data["uuid"]) == str(uuid)):                
+                if quantidade_lixo > data["capacidade"]:
+                    return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
                 updatedLixeira = {
                     "uuid": uuid,
                     "latitude": data["latitude"],
                     "longitude": data["longitude"],
                     "capacidade": data["capacidade"],
                     "quantidade_lixo": quantidade_lixo,
-                    "estacao": data["estacao"]
+                    "setor": data["setor"]
                 }
-                if quantidade_lixo > data["capacidade"]:
-                    return json.dumps({"message": "Não se pode adicionar mais lixo que a capacidade da lixeira."})
                 self.lista_lixeiras.remove(lixeira)
                 self.lista_lixeiras.append(json.dumps(updatedLixeira))
                 return json.dumps(updatedLixeira)
