@@ -29,6 +29,7 @@ class Setor():
 
     def on_message(self, client, userdata, msg):
         mensagem = str(msg.payload.decode("utf-8"))
+        print(mensagem)
         dados_lixeira = json.loads(mensagem)
         self.cadastrar_lixeira(dados_lixeira)
 
@@ -111,6 +112,7 @@ class Setor():
 
     def getLixeiras(self):
         return self.lista_lixeiras
+
 
 
 if __name__ == "__main__":

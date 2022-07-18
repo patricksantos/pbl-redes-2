@@ -30,10 +30,10 @@ def createdLixeira():
     longitude = body['longitude']
     capacidade = body['capacidade']
     quantidade_lixo = body['quantidade_lixo']
-    estacao = body['estacao']
+    setor = body['setor']
 
     data = apiController.createdLixeira(
-        uuid, latitude, longitude, capacidade, quantidade_lixo, estacao)
+        uuid, latitude, longitude, capacidade, quantidade_lixo, setor)
     return data
 
 

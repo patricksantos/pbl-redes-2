@@ -33,14 +33,14 @@ class ApiController():
                 i += 1
         return json.dumps(getAllLixeiras)
 
-    def createdLixeira(self, uuid, latitude, longitude, capacidade, quantidade_lixo, estacao):
+    def createdLixeira(self, uuid, latitude, longitude, capacidade, quantidade_lixo, setor):
         lixeira = {
             "uuid": uuid,
             "latitude": latitude,
             "longitude": longitude,
             "capacidade": capacidade,
             "quantidade_lixo": quantidade_lixo,
-            "estacao": estacao
+            "setor": setor
         }
         self.lista_lixeiras.append(json.dumps(lixeira))
         return json.dumps(lixeira)

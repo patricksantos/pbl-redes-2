@@ -3,17 +3,20 @@ from this import d
 from flask import Flask
 import Controllers.Setor as setor
 from decouple import config as env
+import threading
 
 app = Flask(__name__)
 apiController = setor.Setor()
 
+thread = threading.Thread(target=apiController.main)
+thread.daemon = True
+thread.start()
 host = env('HOST')
 
 
 @app.route('/lixeira/all/', methods=['GET'])
 def getAllLixeiras():
     data = apiController.requisitar_lixeiras()
-    print(type(data))
     return json.dumps(data)
 
 
