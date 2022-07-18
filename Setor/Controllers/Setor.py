@@ -106,12 +106,15 @@ class Setor():
     def requisitar_lixeiras(self):
         lixeiras_outro_setor = []
         if env('HOST')+":5000" == self.carlos_url:
-            response = requests.get(f'{self.patrick_url}')
+            response = requests.get(f'{self.patrick_url}/lixeira/all')
             lixeiras_outro_setor = response.json()
         else:
-            response = requests.get(f'{self.carlos_url}')
+            response = requests.get(f'{self.carlos_url}/lixeira/all')
             lixeiras_outro_setor = response.json()
         self.lista_lixeiras = self.lista_lixeiras + lixeiras_outro_setor
+        return self.lista_lixeiras
+
+    def getLixeiras(self):
         return self.lista_lixeiras
 
 
